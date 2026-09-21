@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: distributed-rate-limiter
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 2
+
+server:
+  port: 8080
+
+# Rate limiter defaults (overridable per client via config)
+rate-limiter:
+  default-limit: 100          # max requests
+  default-window-seconds: 60  # per this many seconds
+  cleanup-interval: 300       # Redis key TTL cleanup every N seconds
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
